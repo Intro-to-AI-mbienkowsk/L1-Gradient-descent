@@ -7,7 +7,7 @@ class Solver(ABC):
     @abstractmethod
     def get_parameters(self):
         """Returns a dictionary of hyperparameters"""
-        ...
+        return self.parameters
 
     @abstractmethod
     def solve(self, problem, x0, *args, **kwargs):
@@ -17,3 +17,9 @@ class Solver(ABC):
         Returns the solution and may return additional info.
         """
         ...
+
+    def __init__(self, parameters=None):
+        if parameters is None:
+            parameters = {}
+        self.parameters = parameters
+
