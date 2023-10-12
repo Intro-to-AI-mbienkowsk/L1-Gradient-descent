@@ -20,11 +20,21 @@ class Problem:
         return self._num_of_vars
 
     def calculate_function_value(self, x0: Tuple[Number]) -> Number:
+        """
+        Calculates the value of the problem's function at a given point x0
+        :param x0: point in the R^n space, n = len(x0)
+        :return: the value of the function
+        """
         if len(x0) != self.num_of_vars:
             raise ValueError(f"Wrong number of variables in x0 ({len(x0)}). Required: {self.num_of_vars}.")
         return self._function(x0)
 
     def calculate_gradient_value(self, x0: Tuple[Number]) -> Tuple[Number, ...]:
+        """
+        Calculates the value of the problem's gradient at a given point x0
+        :param x0: point in the R^n space where n = len(x0)
+        :return: the gradient of the function at x0, a tuple of length n
+        """
         if len(x0) != self.num_of_vars:
             raise ValueError(f"Wrong number of variables in x0 ({len(x0)}). Required: {self.num_of_vars}.")
         return tuple(self._gradient[i](x0) for i in range(self.num_of_vars))
