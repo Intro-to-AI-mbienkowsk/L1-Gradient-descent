@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from constants import DEFAULT_BETA, DEFAULT_EPSILON, DEFAULT_MAX_ITERATIONS
 
 
 class Solver(ABC):
@@ -7,7 +8,7 @@ class Solver(ABC):
     @abstractmethod
     def get_parameters(self):
         """Returns a dictionary of hyperparameters"""
-        return self.parameters
+        return self._parameters
 
     @abstractmethod
     def solve(self, problem, x0, *args, **kwargs):
@@ -20,6 +21,12 @@ class Solver(ABC):
 
     def __init__(self, parameters=None):
         if parameters is None:
-            parameters = {}
-        self.parameters = parameters
+            self._parameters = {"beta": DEFAULT_BETA, "epsilon": DEFAULT_EPSILON,
+                                "max_iterations": DEFAULT_MAX_ITERATIONS}
+        else:
+            self._parameters["beta"] = DEFAULT_BETA if "beta" not in parameters else parameters["beta"]
+            self._parameters["epsilon"] = DEFAULT_EPSILON if "epsilon" not in parameters else parameters["epsilon"]
+            self._parameters["max_iterations"] = DEFAULT_MAX_ITERATIONS if "max_iterations" not in parameters \
+                else parameters["max_iterations"]
 
+        self._parameters = parameters
