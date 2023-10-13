@@ -8,7 +8,7 @@ class Solver(ABC):
     @abstractmethod
     def get_parameters(self):
         """Returns a dictionary of hyperparameters"""
-        return self._parameters
+        ...
 
     @abstractmethod
     def solve(self, problem, x0, *args, **kwargs):
@@ -19,6 +19,21 @@ class Solver(ABC):
         """
         ...
 
+
+class GradientSolver(Solver):
+    def get_parameters(self):
+        return self._parameters
+
+    def solve(self, problem, x0, *args, **kwargs):
+        x = x0
+        iterations = 0
+        while True:
+            d = problem.calculate_gradient_value(x0)
+            x = x - self.get_parameters()["beta"] * d
+            iterations += 1
+            if iterations == 100:
+                return x
+
     def __init__(self, parameters=None):
         if parameters is None:
             self._parameters = {"beta": DEFAULT_BETA, "epsilon": DEFAULT_EPSILON,
@@ -28,5 +43,3 @@ class Solver(ABC):
             self._parameters["epsilon"] = DEFAULT_EPSILON if "epsilon" not in parameters else parameters["epsilon"]
             self._parameters["max_iterations"] = DEFAULT_MAX_ITERATIONS if "max_iterations" not in parameters \
                 else parameters["max_iterations"]
-
-        self._parameters = parameters
