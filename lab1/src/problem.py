@@ -3,17 +3,17 @@ from numbers import Number
 
 
 class Problem:
-    def __init__(self, num_of_vars: int, function: Callable[[Tuple[Number]], Number],
+    def __init__(self, num_of_variables: int, function: Callable[[Tuple[Number]], Number],
                  gradient: Tuple[Callable[[Tuple[Number]], Number]]):
         # todo: validation whether num_of_vars equals number of parameters in function and gradient
-        if num_of_vars < 0:
+        if num_of_variables < 0:
             raise ValueError("Number of variables can't be negative!")
-        if len(gradient) != num_of_vars:
+        if len(gradient) != num_of_variables:
             raise ValueError("Number of elements in gradient has to be equal to the number of variables!")
 
         self._function = function
         self._gradient = gradient
-        self._num_of_vars = num_of_vars
+        self._num_of_vars = num_of_variables
 
     @property
     def num_of_vars(self):
