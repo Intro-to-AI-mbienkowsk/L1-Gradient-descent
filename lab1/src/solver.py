@@ -26,13 +26,10 @@ class GradientSolver(Solver):
 
     def solve(self, problem, x0, *args, **kwargs):
         x = x0
-        iterations = 0
-        while True:
+        for _ in range(self.get_parameters()["max_iterations"]):
             d = problem.calculate_gradient_value(x)
             x = x - self.get_parameters()["beta"] * d
-            iterations += 1
-            if iterations == 1000:
-                return x
+        return x
 
     def __init__(self, parameters=None):
         if parameters is None:
