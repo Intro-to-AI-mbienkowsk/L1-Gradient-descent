@@ -5,17 +5,11 @@ import numpy as np
 
 class Problem:
     def __init__(self, num_of_variables: int, function: callable,
-                 gradient: tuple[callable] or callable):
+                 gradient: callable):
         # todo: validation whether num_of_vars equals number of parameters in function and gradient
-
-        # convert single-dimensional gradients to a standard tuple of functions like in higher dimensions
-        if not isinstance(gradient, tuple):
-            gradient = (gradient, )
 
         if num_of_variables < 0:
             raise ValueError("Number of variables can't be negative!")
-        if len(gradient) != num_of_variables:
-            raise ValueError("Number of elements in gradient has to be equal to the number of variables!")
 
         self._function = function
         self._gradient = gradient
@@ -51,10 +45,4 @@ class Problem:
         if x0.size != self.num_of_vars:
             raise ValueError(f"Wrong number of variables in x0 ({len(x0)}). Required: {self.num_of_vars}.")
 
-        # iterate over all elements of the vector and calculate respective gradients
-        if x0.ndim != 0:
-            gradient = np.array([self._gradient[k](x0) for k in range(self.num_of_vars)])
-        else:
-            # since a 0d array is not iterable, separate case for it
-            gradient = np.array([self._gradient[0](x0)])
-        return gradient
+        return self._gradient(x0)
