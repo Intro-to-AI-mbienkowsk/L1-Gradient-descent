@@ -10,7 +10,7 @@ class Problem:
 
         # convert single-dimensional gradients to a standard tuple of functions like in higher dimensions
         if not isinstance(gradient, tuple):
-            gradient = tuple(gradient, )
+            gradient = (gradient, )
 
         if num_of_variables < 0:
             raise ValueError("Number of variables can't be negative!")
@@ -31,7 +31,7 @@ class Problem:
         :param x0: point in the R^n space, n = len(x0)
         :return: the value of the function
         """
-        if not isinstance(x0, np.array):
+        if not isinstance(x0, np.ndarray):
             x0 = np.array(x0)
 
         if len(x0) != self.num_of_vars:
