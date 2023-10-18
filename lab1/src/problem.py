@@ -43,11 +43,18 @@ class Problem:
         """
         Calculates the value of the problem's gradient at a given point x0
         :param x0: point in the R^n space where n = len(x0)
-        :return: the gradient of the function at x0, a tuple of length n
+        :return: the gradient of the function at x0, a np.array of size 1 x n
         """
         if not isinstance(x0, np.ndarray):
             x0 = np.array(x0)
 
         if x0.size != self.num_of_vars:
             raise ValueError(f"Wrong number of variables in x0 ({len(x0)}). Required: {self.num_of_vars}.")
-        return np.array([self._gradient[i](x0) for i in range(self.num_of_vars)])
+
+        # iterate over all elements of the vector and calculate respective gradients
+        if x0.ndim != 0:
+            gradient = np.array([self._gradient[k](x0) for k in range(self.num_of_vars)])
+        else:
+            # since a 0d array is not iterable, separate case for it
+            gradient = np.array([self._gradient[0](x0)])
+        return gradient
