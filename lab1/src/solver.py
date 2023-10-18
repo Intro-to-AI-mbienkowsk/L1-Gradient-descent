@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from constants import DEFAULT_BETA, DEFAULT_EPSILON, DEFAULT_MAX_ITERATIONS
+import numpy as np
 
 
 class Solver(ABC):
@@ -28,14 +29,23 @@ class GradientSolver(Solver):
         x = x0
         for _ in range(self.get_parameters()["max_iterations"]):
             d = problem.calculate_gradient_value(x)
+            if np.linalg.norm(d) <= self.get_parameters()["epsilon"]:
+                if self.get_parameters()["debug"]:
+                    print(f"Converged after {_} iterations!")
+                return x
             x = x - self.get_parameters()["beta"] * d
+
+        if self.get_parameters()["debug"]:
+            print("Maximum number of iterations exceeded!")
         return x
 
     def __init__(self, parameters=None):
         if parameters is None:
             self._parameters = {"beta": DEFAULT_BETA, "epsilon": DEFAULT_EPSILON,
-                                "max_iterations": DEFAULT_MAX_ITERATIONS}
+                                "max_iterations": DEFAULT_MAX_ITERATIONS, "debug": False}
         else:
+            self._parameters = dict()
+            self._parameters["debug"] = False if "debug" not in parameters else parameters["debug"]
             self._parameters["beta"] = DEFAULT_BETA if "beta" not in parameters else parameters["beta"]
             self._parameters["epsilon"] = DEFAULT_EPSILON if "epsilon" not in parameters else parameters["epsilon"]
             self._parameters["max_iterations"] = DEFAULT_MAX_ITERATIONS if "max_iterations" not in parameters \
