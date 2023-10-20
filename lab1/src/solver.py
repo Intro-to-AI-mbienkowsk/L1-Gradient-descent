@@ -44,15 +44,7 @@ class GradientSolver(Solver):
             print("Maximum number of iterations exceeded!")
         return x
 
-    def __init__(self, parameters=None):
-        if parameters is None:
-            self._parameters = {"beta": DEFAULT_BETA, "epsilon": DEFAULT_EPSILON,
-                                "max_iterations": DEFAULT_MAX_ITERATIONS, "debug": False}
-        else:
-            self._parameters = dict()
-            self._parameters["plot"] = True if "plot" not in parameters else parameters["plot"]
-            self._parameters["debug"] = False if "debug" not in parameters else parameters["debug"]
-            self._parameters["beta"] = DEFAULT_BETA if "beta" not in parameters else parameters["beta"]
-            self._parameters["epsilon"] = DEFAULT_EPSILON if "epsilon" not in parameters else parameters["epsilon"]
-            self._parameters["max_iterations"] = DEFAULT_MAX_ITERATIONS if "max_iterations" not in parameters \
-                else parameters["max_iterations"]
+    def __init__(self, beta=DEFAULT_BETA, epsilon=DEFAULT_EPSILON, max_iterations=DEFAULT_MAX_ITERATIONS, plot=True,
+                 debug=False):
+        self._parameters = {"beta": beta, "epsilon": epsilon,
+                            "max_iterations": max_iterations, "debug": debug, "plot": plot}
