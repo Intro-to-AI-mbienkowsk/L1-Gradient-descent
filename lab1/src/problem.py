@@ -6,7 +6,6 @@ import numpy as np
 class Problem:
     def __init__(self, num_of_variables: int, function: callable,
                  gradient: callable):
-        # todo: validation whether num_of_vars equals number of parameters in function and gradient
 
         if num_of_variables < 0:
             raise ValueError("Number of variables can't be negative!")
