@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from constants import DEFAULT_BETA, DEFAULT_EPSILON, DEFAULT_MAX_ITERATIONS
-from Plotter import Plotter
+from .constants import DEFAULT_BETA, DEFAULT_EPSILON, DEFAULT_MAX_ITERATIONS
+from .Plotter import Plotter
 import numpy as np
 
 
@@ -27,8 +27,8 @@ class GradientSolver(Solver):
         return self._parameters
 
     def solve(self, problem, x0, *args, **kwargs):
-        x = x0
-        points_visited = [x0]
+        x = x0 if isinstance(x0, np.ndarray) else np.array([x0])
+        points_visited = [x]
         iterations = 0
         gradient_value = problem.calculate_gradient_value(x)
         while (iterations < self.get_parameters()["max_iterations"] and
@@ -39,10 +39,12 @@ class GradientSolver(Solver):
             iterations += 1
 
         if self.get_parameters()["debug"]:
-            feedback = (f"Converged after {iterations} iterations!"
-                        if iterations < self.get_parameters()["max_iterations"]
-                        else "Maximum number of iterations exceeded!")
-            print(feedback)
+            starting_point_feedback = f"For the starting point {x0}, the algorithm has"
+            convergence_feedback = (f"converged after {iterations} iterations"
+                                    if iterations < self.get_parameters()["max_iterations"]
+                                    else f"exceeded the maximum number of iterations! ({iterations})")
+            solution_feedback = f"at the point {[round(coord, 3) for coord in x]}."
+            print(f"{starting_point_feedback} {convergence_feedback} {solution_feedback}")
         if self.get_parameters()["plot"]:
             plotter = Plotter(problem, self._parameters["plot"])
             plotter.initialize_plot()
