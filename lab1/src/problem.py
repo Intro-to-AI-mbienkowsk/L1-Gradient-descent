@@ -26,10 +26,6 @@ class Problem:
         """
         if not isinstance(x0, np.ndarray):
             x0 = np.array(x0)
-
-        if len(x0) != self.num_of_vars:
-            raise ValueError(
-                f"Wrong number of variables in x0 ({len(x0)}). Required: {self.num_of_vars}.")
         return self._function(x0)
 
     def calculate_gradient_value(self, x0: np.ndarray[Number] | Number) -> np.ndarray[Number]:
@@ -40,8 +36,4 @@ class Problem:
         """
         if not isinstance(x0, np.ndarray):
             x0 = np.array(x0)
-
-        if x0.size != self.num_of_vars:
-            raise ValueError(f"Wrong number of variables in x0 ({len(x0)}). Required: {self.num_of_vars}.")
-
         return self._gradient(x0)
