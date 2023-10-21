@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from problem import Problem
+from .problem import Problem
+from .constants import G_GLOBAL_MIN_ELEV, G_GLOBAL_MIN_AZIM
 
 
 class Plotter:
@@ -13,6 +14,10 @@ class Plotter:
         self._mode = mode
 
         self._solving_path = []
+
+    @property
+    def ax(self):
+        return self._ax
 
     def initialize_plot(self):
         arg_values = np.arange(-5, 5, .001)
@@ -40,6 +45,8 @@ class Plotter:
         if self._dimensions == 3:
             path_z_values = self._problem.calculate_function_value(np.array([path_x_values, path_y_values]))
             plot_values.append(path_z_values)
+            self._ax.view_init(elev=G_GLOBAL_MIN_ELEV, azim=G_GLOBAL_MIN_AZIM)
+
 
         if self._mode == "path":
             # connect plot_values with lines
