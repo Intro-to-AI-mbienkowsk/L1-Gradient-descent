@@ -4,12 +4,13 @@ from problem import Problem
 
 
 class Plotter:
-    def __init__(self, problem: Problem):
+    def __init__(self, problem: Problem, mode: str):
         if problem.num_of_vars > 2:
             raise ValueError("Maximum number of dimensions supported by the plotter is 3.")
         self._problem = problem
         self._dimensions = self._problem.num_of_vars + 1
         self._ax = plt.figure().add_subplot(111, projection='3d' if self._dimensions == 3 else None)
+        self._mode = mode
 
         self._solving_path = []
 
@@ -29,7 +30,23 @@ class Plotter:
             self._ax.set_xlabel('x')
             self._ax.set_ylabel('f(x)')
 
-        plt.show()
+    def plot_solution_data(self, points: np.ndarray):
+        path_x_values = np.array([point[0] for point in points])
+        path_y_values = np.array(
+            [point[1] for point in points]) if self._dimensions == 3 else self._problem.calculate_function_value(
+            path_x_values)
+
+        plot_values = [path_x_values, path_y_values]
+        if self._dimensions == 3:
+            path_z_values = self._problem.calculate_function_value(np.array([path_x_values, path_y_values]))
+            plot_values.append(path_z_values)
+
+        if self._mode == "path":
+            # connect plot_values with lines
+            self._ax.plot(*plot_values, color='red', zorder=2, marker='.', linewidth=2)
+            plt.show()
+
+
 
     def add_point(self, x):
         self._solving_path.append(x)
