@@ -27,24 +27,29 @@ class GradientSolver(Solver):
         return self._parameters
 
     def solve(self, problem, x0, *args, **kwargs):
-        if self.get_parameters()["plot"]:
-            plotter = Plotter(problem)
-            plotter.initialize_plot()
-
         x = x0
-        for _ in range(self.get_parameters()["max_iterations"]):
-            d = problem.calculate_gradient_value(x)
-            if np.linalg.norm(d) <= self.get_parameters()["epsilon"]:
-                if self.get_parameters()["debug"]:
-                    print(f"Converged after {_} iterations!")
-                return x
-            x = x - self.get_parameters()["beta"] * d
+        points_visited = [x0]
+        iterations = 0
+        gradient_value = problem.calculate_gradient_value(x)
+        while (iterations < self.get_parameters()["max_iterations"] and
+               np.linalg.norm(gradient_value) > self.get_parameters()["epsilon"]):
+            x = x - self.get_parameters()["beta"] * gradient_value
+            gradient_value = problem.calculate_gradient_value(x)
+            points_visited.append(x)
+            iterations += 1
 
         if self.get_parameters()["debug"]:
-            print("Maximum number of iterations exceeded!")
+            feedback = (f"Converged after {iterations} iterations!"
+                        if iterations < self.get_parameters()["max_iterations"]
+                        else "Maximum number of iterations exceeded!")
+            print(feedback)
+        if self.get_parameters()["plot"]:
+            plotter = Plotter(problem, self._parameters["plot"])
+            plotter.initialize_plot()
+            plotter.plot_solution_data(np.array(points_visited))
         return x
 
-    def __init__(self, beta=DEFAULT_BETA, epsilon=DEFAULT_EPSILON, max_iterations=DEFAULT_MAX_ITERATIONS, plot=True,
+    def __init__(self, beta=DEFAULT_BETA, epsilon=DEFAULT_EPSILON, max_iterations=DEFAULT_MAX_ITERATIONS, plot="path",
                  debug=False):
         self._parameters = {"beta": beta, "epsilon": epsilon,
                             "max_iterations": max_iterations, "debug": debug, "plot": plot}
