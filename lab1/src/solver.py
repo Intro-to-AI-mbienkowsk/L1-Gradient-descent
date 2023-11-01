@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from .constants import DEFAULT_BETA, DEFAULT_EPSILON, DEFAULT_MAX_ITERATIONS
-from .Plotter import Plotter
+from .plotter import Plotter
 import numpy as np
 
 
