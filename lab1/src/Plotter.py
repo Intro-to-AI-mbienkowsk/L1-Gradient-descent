@@ -20,7 +20,7 @@ class Plotter:
         return self._ax
 
     def initialize_plot(self):
-        arg_values = np.arange(-5, 5, .001)
+        arg_values = np.arange(-7, 7, .01)
         if self._dimensions == 3:
             X, Y = np.meshgrid(arg_values, arg_values)
             Z = self._problem.calculate_function_value(np.array([X, Y]))
@@ -52,11 +52,8 @@ class Plotter:
             # connect plot_values with lines
             self._ax.plot(*plot_values, color='red', zorder=2, marker='.', linewidth=2)
             plt.show()
-
-
+        elif self._mode == "no_solution":
+            plt.show()
 
     def add_point(self, x):
         self._solving_path.append(x)
-
-    def update_plot(self):
-        pass
